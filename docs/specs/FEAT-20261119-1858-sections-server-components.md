@@ -32,3 +32,17 @@ No test tooling exists in the project. Options with trade-offs:
 2. Jest + RTL + Playwright. Works but needs more Next-specific config than Vitest.
 3. Playwright only. Fewest dependencies; no fast unit level.
 Recommended: option 1.
+
+## Changes made during implementation (recorded after the fact)
+- **CSS kept verbatim.** The spec said to drop overridden rules. I copied the whole stylesheet unchanged instead, so the cascade is identical by construction. Pruning dead rules is a separate, optional cleanup (it can be checked with the parity test below).
+- **Footer year** is a tiny client component (`Year.tsx`). Next.js 16 refuses to prerender `new Date()`. The original also filled `#year` with JS after load, so this matches it.
+- **Test tooling installed** (dev only): `vitest`, `@vitejs/plugin-react`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `@playwright/test`. `vite-tsconfig-paths` was installed then removed (Vite handles tsconfig paths itself). `@types/node` was raised from ^20 to ^24 because Vitest 5 needs >=22 and `.nvmrc` is Node 24. Chromium for Playwright lives in `~/.cache/ms-playwright` (not a global npm install).
+- **Original kept as a test fixture** at `portfolio/tests/fixtures/original.html`.
+- **Parity test method:** `tests/e2e/parity.spec.ts` opens the original file and the Next.js build, forces each of the 7 panels visible the same way on both, takes screenshots with animations disabled, and requires the bytes to be identical. Widths: 1440, 850, 640. A negative test proves the check detects a real change. The active nav link is set by the test on both pages, because that behaviour belongs to FEAT-20261119-1859.
+
+## Test plan result
+- Unit/integration (Vitest, 13 tests): run, pass.
+- E2E parity (Playwright, 22 tests): run, pass (byte-identical at all 3 widths).
+- Negative: the parity-detects-a-change test ran. NOT run: "content file missing a required field fails type-check" (the content file is not strictly typed, so this does not hold).
+- Input-variation: unicode and no-empty/no-duplicate checks ran. NOT run: very long text and empty-list layout tests.
+- Scroll effect, nav active state and menu toggle are not part of this item (FEAT-20261119-1859).
