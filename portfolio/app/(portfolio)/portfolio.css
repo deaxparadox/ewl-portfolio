@@ -1,0 +1,10 @@
+/* Portfolio group styles. Full stylesheet lands with FEAT-20261119-1858. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
