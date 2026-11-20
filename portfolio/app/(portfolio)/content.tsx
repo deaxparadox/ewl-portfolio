@@ -1,5 +1,22 @@
 import type { ReactNode } from "react";
 
+export type NavLink = { href: string; label: string };
+export type AboutNote = { label: string; body: string };
+export type FocusCard = { index: string; icon: string; title: string; body: string; delay: string };
+export type StackGroup = { title: string; delay: string; tags: string[] };
+export type Project = {
+  visual: "doc" | "gateway" | "queue";
+  wide: boolean;
+  delay: string;
+  label: string;
+  meta: string;
+  title: ReactNode;
+  body: string;
+  tags: string[];
+};
+export type QueueRow = { text: string; state: string };
+export type Step = { no: string; title: string; body: string; symbol: string };
+
 // All portfolio text lives here. Replace the placeholders (name, email, links) in this file only.
 export const profile = {
   name: "YOUR NAME",
@@ -8,7 +25,7 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/yourusername/",
 };
 
-export const nav = [
+export const nav: NavLink[] = [
   { href: "#top", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#capabilities", label: "Focus" },
@@ -16,7 +33,7 @@ export const nav = [
   { href: "#work", label: "Work" },
   { href: "#approach", label: "Approach" },
 ];
-export const navCta = { href: "#contact", label: "Let's talk ↗" };
+export const navCta: NavLink = { href: "#contact", label: "Let's talk ↗" };
 
 export const ticker = [
   "Backend systems",
@@ -25,7 +42,7 @@ export const ticker = [
   "Reliable products",
 ];
 
-export const about = {
+export const about: { kicker: string; heading: ReactNode; asideNote: ReactNode; text: ReactNode; small: AboutNote[] } = {
   kicker: "01 / The person behind the pull request",
   heading: (
     <>
@@ -60,7 +77,7 @@ export const about = {
   ],
 };
 
-export const focus = {
+export const focus: { kicker: string; heading: ReactNode; intro: string; cards: FocusCard[] } = {
   kicker: "02 / Areas of focus",
   heading: (
     <>
@@ -81,7 +98,7 @@ export const focus = {
   ],
 };
 
-export const stack = {
+export const stack: { kicker: string; note: string; groups: StackGroup[] } = {
   kicker: "03 / Tools in the toolbox",
   note: "Tools are just tools. I choose them based on the problem, the constraints, and the people who will maintain the result.",
   groups: [
@@ -92,7 +109,7 @@ export const stack = {
   ],
 };
 
-export const work = {
+export const work: { kicker: string; heading: ReactNode; note: string; projects: Project[]; queueRows: QueueRow[] } = {
   kicker: "04 / Selected work",
   heading: (
     <>
@@ -104,32 +121,32 @@ export const work = {
   note: "A few directions that reflect the kind of problems I enjoy solving. Replace these concept cards with your shipped projects, repositories, and real outcomes.",
   projects: [
     {
-      visual: "doc" as const,
+      visual: "doc",
       wide: true,
       delay: "",
       label: "01 / Document intelligence",
       meta: "01 — Data + AI",
-      title: (<>DocuLens<br />Document intelligence</>) as ReactNode,
+      title: (<>DocuLens<br />Document intelligence</>),
       body: "A pipeline that turns messy financial documents into structured, reviewable data — from ingestion and OCR to extraction, validation, and human feedback.",
       tags: ["Python", "OCR", "LLM", "PostgreSQL"],
     },
     {
-      visual: "gateway" as const,
+      visual: "gateway",
       wide: false,
       delay: " delay-1",
       label: "02 / Model infrastructure",
       meta: "02 — Architecture",
-      title: (<>Model Gateway<br />One interface, many models</>) as ReactNode,
+      title: (<>Model Gateway<br />One interface, many models</>),
       body: "A provider-agnostic layer that standardises requests, handles provider differences, and makes model selection configurable.",
       tags: ["Adapters", "Strategy", "LLMs"],
     },
     {
-      visual: "queue" as const,
+      visual: "queue",
       wide: false,
       delay: " delay-2",
       label: "03 / Async workflows",
       meta: "03 — Reliability",
-      title: (<>Async Ops<br />Background job engine</>) as ReactNode,
+      title: (<>Async Ops<br />Background job engine</>),
       body: "A resilient job-processing service with retries, task status, idempotency, observability, and clear failure paths.",
       tags: ["Celery", "Redis", "Docker"],
     },
@@ -141,7 +158,7 @@ export const work = {
   ],
 };
 
-export const approach = {
+export const approach: { kicker: string; heading: ReactNode; note: string; steps: Step[] } = {
   kicker: "05 / How I work",
   heading: (
     <>

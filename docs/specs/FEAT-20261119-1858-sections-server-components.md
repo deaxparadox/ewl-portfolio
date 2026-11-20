@@ -40,9 +40,10 @@ Recommended: option 1.
 - **Original kept as a test fixture** at `portfolio/tests/fixtures/original.html`.
 - **Parity test method:** `tests/e2e/parity.spec.ts` opens the original file and the Next.js build, forces each of the 7 panels visible the same way on both, takes screenshots with animations disabled, and requires the bytes to be identical. Widths: 1440, 850, 640. A negative test proves the check detects a real change. The active nav link is set by the test on both pages, because that behaviour belongs to FEAT-20261119-1859.
 
-## Test plan result
-- Unit/integration (Vitest, 13 tests): run, pass.
-- E2E parity (Playwright, 22 tests): run, pass (byte-identical at all 3 widths).
-- Negative: the parity-detects-a-change test ran. NOT run: "content file missing a required field fails type-check" (the content file is not strictly typed, so this does not hold).
-- Input-variation: unicode and no-empty/no-duplicate checks ran. NOT run: very long text and empty-list layout tests.
+## Test plan result (final)
+- Unit/integration (Vitest, 15 tests): run, pass. Command: `npm test`.
+- E2E parity (Playwright, 22 tests): run, pass (byte-identical at 1440, 850, 640). Command: `npm run test:e2e`.
+- Negative: ran. The parity-detects-a-change test, plus `tests/unit/content-types.test.ts`, which type-checks a deliberately wrong content file and asserts TS2741 (missing `body`) and TS2322 (tags not an array). Written first and seen red, then green after the content types were added.
+- Input-variation: ran for unicode, no empty values and no duplicates. **Skipped (approved by you): very long text and empty-list layout tests. Reason: the content is fixed placeholder text that is replaced once with text of similar length, so these cases cannot occur.**
+- Lateral/causal check: the same untyped-content gap existed for every list in `content.tsx` (nav, about notes, cards, stack groups, projects, queue rows, steps); all are now typed. No other cause found for the earlier red tests.
 - Scroll effect, nav active state and menu toggle are not part of this item (FEAT-20261119-1859).
