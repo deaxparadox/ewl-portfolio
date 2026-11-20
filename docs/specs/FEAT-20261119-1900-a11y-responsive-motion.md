@@ -33,7 +33,7 @@ Differences that are not defects (framework output), left as they are:
 - Next.js writes the viewport meta as `initial-scale=1`; the original has `1.0`. Same meaning.
 - Next.js adds an empty route announcer (role=alert) to the page. The tests ignore it.
 
-Open difference, logged for your decision: **ISS-20261120-0915** (the first Tab lands on the Home nav link in the Next.js build, but on the hero buttons in the original). The order of controls after that is identical. The test for it is marked `fixme` with that ID.
+Decided difference (**ISS-20261120-0915**, your decision: keep the Next.js behaviour): the first Tab lands on the Home nav link (menu button at 640), where the original lands on the hero buttons because it rewrites the URL to #top before loading. The order of controls after that is identical. A test now locks in the Next.js behaviour.
 
 ## Test plan result
 - Unit: reduced-motion branch of the scroll math (in FEAT-20261119-1859's `stack.test.ts`, 15 tests). Run, pass.
@@ -46,5 +46,5 @@ Open difference, logged for your decision: **ISS-20261120-0915** (the first Tab 
   - Tab order identical from the first nav control onward, at 1440 and 640 wide; Escape closing the menu (in `scroll.spec.ts`). Pass.
 - Negative: with reduced motion on, no animation keeps running (and a sanity test proves animations do run otherwise). Pass.
 - Input-variation: both sides of every breakpoint (849/850/851, 639/640/641, heights 699/700/701). Pass.
-- Real-world: a real browser against the production build (above). **Screen reader smoke test: NOT run** (no screen reader available here); the Chrome accessibility tree comparison is the closest substitute and is not the same thing.
+- Real-world: a real browser against the production build (above). **Screen reader smoke test: skipped (approved by you) because no screen reader is available here; the Chrome accessibility tree comparison was done instead and is not the same thing.**
 - Flakiness: the first run had one random mismatch (1000x701) that did not come back in 5 further runs; the accessibility tree is now read 150 ms after a panel change because Chrome refreshes it lazily.

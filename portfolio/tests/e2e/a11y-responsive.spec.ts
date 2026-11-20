@@ -205,14 +205,17 @@ for (const vp of [
       expect(controls.size).toBe(vp.name === "desktop" ? 9 : 3);
     });
 
-    // ISS-20261120-0915: the original's first Tab goes to the hero buttons; Next.js goes to the Home nav link.
-    test.fixme("first Tab lands on the same control as the original", async ({ page }) => {
-      const first = async (url: string) => {
-        await load(page, url);
-        await page.keyboard.press("Tab");
-        return page.evaluate(() => (document.activeElement as HTMLElement).getAttribute("href"));
-      };
-      expect(await first("/")).toBe(await first(ORIGINAL));
+    // ISS-20261120-0915 (decided): the original's first Tab skips the nav and lands on the hero buttons, only because
+    // it rewrites the URL to #top before loading. We keep the standard behaviour: the first Tab reaches the first control.
+    test("first Tab reaches the first control on the page (nav / menu button)", async ({ page }) => {
+      await load(page, "/");
+      await page.keyboard.press("Tab");
+      const expected = vp.name === "desktop" ? "A|#top" : "BUTTON|";
+      const got = await page.evaluate(() => {
+        const e = document.activeElement as HTMLElement;
+        return `${e.tagName}|${e.getAttribute("href") ?? ""}`;
+      });
+      expect(got).toBe(expected);
     });
   });
 }
