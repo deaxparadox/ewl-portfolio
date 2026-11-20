@@ -4,6 +4,7 @@ import { Contact } from "./_components/Contact";
 import { Focus } from "./_components/Focus";
 import { Hero } from "./_components/Hero";
 import { Nav } from "./_components/Nav";
+import { ScrollStack } from "./_components/ScrollStack";
 import { Stack } from "./_components/Stack";
 import { Work } from "./_components/Work";
 
@@ -21,6 +22,7 @@ export default function PortfolioPage() {
         <Contact />
       </main>
       <div id="scrollTrack" aria-hidden="true"></div>
+      <ScrollStack />
     </>
   );
 }

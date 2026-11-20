@@ -617,3 +617,15 @@ body { scrollbar-width: none; }
   .panel { will-change: auto; }
 }
 
+
+/* Performance (FEAT-20261119-1859): same look, cheaper to draw. */
+/* Progress bar moves with transform (compositor only) instead of width (layout). */
+.progress { width: 100%; transform: scaleX(0); transform-origin: 0 50%; will-change: transform; }
+/* Only the visible panels get their own GPU layer, instead of all 7 permanently. */
+.panel { will-change: auto; }
+.panel.is-visible { will-change: transform, opacity, filter, border-radius; }
+/* Pause the decorative loops (orbit, ticker, float, pulse) on panels that are not on screen. */
+.panel:not(.is-active):not(.is-visible),
+.panel:not(.is-active):not(.is-visible) *,
+.panel:not(.is-active):not(.is-visible) *::before,
+.panel:not(.is-active):not(.is-visible) *::after { animation-play-state: paused !important; }

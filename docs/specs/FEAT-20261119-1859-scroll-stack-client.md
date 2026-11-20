@@ -29,3 +29,23 @@ One small client component that reproduces the HTML's scroll-linked section stac
 - Input-variation: very small/large viewport heights, resize mid-scroll, rapid scroll, hash with unicode.
 - Real-world: dev server in a real browser, scroll with wheel, keyboard and touch emulation.
 - Performance: handled in EXP-20261119-1901.
+
+## Changes made during implementation (recorded after the fact)
+- **Files:** `_lib/stack.ts` (pure math, formulas copied from the original), `_lib/scrollStack.ts` (DOM wiring, one function that returns a cleanup), `_components/ScrollStack.tsx` (renders nothing, calls it in an effect), plus a short block at the end of `portfolio.css`.
+- **Per frame it only writes the two moving panels** (and clears the ones that just left), and only the CSS properties whose value changed. The original reset all 7 panels every frame.
+- **Progress bar** now moves with `transform: scaleX()` instead of `width`. Same look; the test hides the bar for pixel comparison and checks its width separately (within 0.5px of the original at every position).
+- **`will-change`** is now only on visible panels (original: all 7 permanently).
+- **Decorative loops** (orbit, ticker, float, pulse) pause on panels that are not on screen.
+- **`contain` was NOT added** (the design section listed it). Reason: no measured benefit yet, and it risks clipping; EXP-20261119-1901 will show whether it is worth trying.
+- **Everything else is as in the original:** same scroll math, hash sync, smooth nav scroll, resize behaviour, Escape handling, menu toggle.
+- **Two test-side lessons:** tests must wait for the script to start (it resets scroll to the hash panel on load, like the original); and synthesized Chrome scroll gestures do nothing on either page, so the touch test sends real touch events.
+
+## Test plan result (final)
+- Unit (Vitest): `computeStack` (15 tests): boundaries at p=0.5 and 0.0005, clamping, percentage, narrow-screen radius (`< 641`), reduced motion, 0/1/2 panels, viewport heights 1/100/320/5000. Run, pass.
+- Integration (Vitest + jsdom, 14 tests): the real page. Active panel, aria, nav, progress, URL hash, only two panels visible, one frame per scroll burst, nav and in-panel links, menu toggle and Escape, load with hash, resize, cleanup on unmount. Run, pass.
+- E2E (Playwright, real Chromium, 32 tests total with the section tests): every scroll position (4 steps per panel boundary, to the end and back up) at 1440 and 640 widths gives a screenshot byte-identical to the original; nav click, load with `#work`, unknown hash, keyboard, mouse wheel, touch swipe, scroll back up, mobile menu. Run, pass, twice in a row.
+- Negative: unknown/empty/unicode hashes ignored, 0 panels, missing stage, listeners removed on unmount. Run, pass.
+- Input-variation: viewport heights, resize mid-scroll, 50 rapid scroll events, hash with unicode. Run, pass.
+- Real-world: a real browser against the production build with wheel, keyboard and touch events. Done.
+- Not part of this item: speed measurement (EXP-20261119-1901). Reduced-motion and breakpoint parity (FEAT-20261119-1900).
+- Lateral check: the one-panel-per-frame and cleanup logic applies to every panel the same way (no per-section code). Causal check: the original's per-frame full reset was the only extra per-frame cost found in its script; the CSS costs were `will-change` on all panels and `width` on the progress bar, both addressed.
