@@ -11,7 +11,8 @@ export function Contact() {
           <p className="contact-note">{contact.note}</p>
           <div className="contact-actions">
             <a className="button" href={`mailto:${profile.email}?subject=${contact.mailSubject}`}>
-              {profile.email} <span className="arrow">↗</span>
+              {`${profile.email} `}
+              <span className="arrow">↗</span>
             </a>
             <a className="social-link" href={profile.github} target="_blank" rel="noreferrer">
               GitHub ↗
@@ -29,7 +30,7 @@ export function Contact() {
             {` ${profile.name} — BUILT WITH INTENTION.`}
           </span>
           <span>
-            YELLOW IS A STATE OF MIND.{" "}
+            {"YELLOW IS A STATE OF MIND. "}
             <a className="back-top" href="#top" data-panel-link="">
               BACK TO TOP ↑
             </a>

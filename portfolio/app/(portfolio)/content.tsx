@@ -57,12 +57,12 @@ export const about: { kicker: string; heading: ReactNode; asideNote: ReactNode; 
       Practical by design.
     </>
   ),
+  // One string per text run so React emits a single text node, like the original (split nodes shift glyphs by a sub-pixel).
   text: (
     <>
-      I’m interested in the part of software that makes everything{" "}
-      <strong>hold together</strong>: clean APIs, data models, asynchronous
-      workflows, system boundaries, and AI features that solve an actual
-      problem.
+      {"I’m interested in the part of software that makes everything "}
+      <strong>hold together</strong>
+      {": clean APIs, data models, asynchronous workflows, system boundaries, and AI features that solve an actual problem."}
     </>
   ),
   small: [

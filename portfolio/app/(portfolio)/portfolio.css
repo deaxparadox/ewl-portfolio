@@ -629,3 +629,7 @@ body { scrollbar-width: none; }
 .panel:not(.is-active):not(.is-visible) *,
 .panel:not(.is-active):not(.is-visible) *::before,
 .panel:not(.is-active):not(.is-visible) *::after { animation-play-state: paused !important; }
+/* Keep the original's reduced-motion rule: no layer promotion when the user asks for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .panel.is-visible { will-change: auto; }
+}
